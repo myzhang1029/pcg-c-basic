@@ -42,10 +42,6 @@
  * is huge.
  */
 
-typedef struct {
-    pcg32_random_t gen[2];
-} pcg32x2_random_t;
-
 void pcg32x2_srandom_r(pcg32x2_random_t* rng, uint64_t seed1, uint64_t seed2,
                        uint64_t seq1,  uint64_t seq2)
 {
