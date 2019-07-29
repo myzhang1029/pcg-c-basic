@@ -21,17 +21,7 @@
  *     http://www.pcg-random.org
  */
 
-/*
- * This file was mechanically generated from tests/check-pcg32.c
- */
-
-#include <stdio.h>
-#include <stddef.h>
-#include <stdlib.h>
 #include <stdint.h>
-#include <stdbool.h>
-#include <time.h>
-#include <string.h>
 
 #include "pcg_basic.h"
 
