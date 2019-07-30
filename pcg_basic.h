@@ -52,30 +52,24 @@ typedef struct {
 
 #define PCG32_INITIALIZER   { 0x853c49e6748fea9bULL, 0xda3e39cb94b95bdbULL }
 
-// pcg32_srandom(initstate, initseq)
 // pcg32_srandom_r(rng, initstate, initseq):
 //     Seed the rng.  Specified in two parts, state initializer and a
 //     sequence selection constant (a.k.a. stream id)
 
-void pcg32_srandom(uint64_t initstate, uint64_t initseq);
 void pcg32_srandom_r(pcg32_random_t* rng, uint64_t initstate,
                      uint64_t initseq);
 void pcg32x2_srandom_r(pcg32x2_random_t* rng, uint64_t seed1,
                      uint64_t seed2, uint64_t seq1, uint64_t seq2);
 
-// pcg32_random()
 // pcg32_random_r(rng)
 //     Generate a uniformly distributed 32-bit random number
 
-uint32_t pcg32_random(void);
 uint32_t pcg32_random_r(pcg32_random_t* rng);
 uint64_t pcg32x2_random_r(pcg32x2_random_t* rng);
 
-// pcg32_boundedrand(bound):
 // pcg32_boundedrand_r(rng, bound):
 //     Generate a uniformly distributed number, r, where 0 <= r < bound
 
-uint32_t pcg32_boundedrand(uint32_t bound);
 uint32_t pcg32_boundedrand_r(pcg32_random_t* rng, uint32_t bound);
 uint64_t pcg32x2_boundedrand_r(pcg32x2_random_t* rng, uint64_t bound);
 
