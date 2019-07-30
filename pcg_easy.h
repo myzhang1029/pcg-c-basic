@@ -28,10 +28,10 @@
  * your project.
  */
 
-#ifndef PCG_BASIC_H_INCLUDED
-#define PCG_BASIC_H_INCLUDED 1
+#ifndef PCG_EASY_H_INCLUDED
+#define PCG_EASY_H_INCLUDED 1
 
-#include <inttypes.h>
+#include <stdint.h>
 
 #if __cplusplus
 extern "C" {
@@ -56,25 +56,23 @@ typedef struct {
 //     Seed the rng.  Specified in two parts, state initializer and a
 //     sequence selection constant (a.k.a. stream id)
 
-void pcg32_srandom_r(pcg32_random_t* rng, uint64_t initstate,
-                     uint64_t initseq);
-void pcg32x2_srandom_r(pcg32x2_random_t* rng, uint64_t seed1,
-                     uint64_t seed2, uint64_t seq1, uint64_t seq2);
+void pcg32_srand(pcg32_random_t* rng, uint64_t initstate);
+void pcg32x2_srand(pcg32x2_random_t* rng, uint64_t seed1);
 
 // pcg32_random_r(rng)
 //     Generate a uniformly distributed 32-bit random number
 
-uint32_t pcg32_random_r(pcg32_random_t* rng);
-uint64_t pcg32x2_random_r(pcg32x2_random_t* rng);
+uint32_t pcg32_rand(pcg32_random_t* rng);
+uint64_t pcg32x2_rand(pcg32x2_random_t* rng);
 
 // pcg32_boundedrand_r(rng, bound):
 //     Generate a uniformly distributed number, r, where 0 <= r < bound
 
-uint32_t pcg32_boundedrand_r(pcg32_random_t* rng, uint32_t bound);
-uint64_t pcg32x2_boundedrand_r(pcg32x2_random_t* rng, uint64_t bound);
+uint32_t pcg32_uniform(pcg32_random_t* rng, uint32_t bound);
+uint64_t pcg32x2_uniform(pcg32x2_random_t* rng, uint64_t bound);
 
 #if __cplusplus
 }
 #endif
 
-#endif // PCG_BASIC_H_INCLUDED
+#endif // PCG_EASY_H_INCLUDED

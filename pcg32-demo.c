@@ -33,7 +33,7 @@
 #include <time.h>
 #include <string.h>
 
-#include "pcg_basic.h"
+#include "pcg_easy.h"
 
 int main(int argc, char** argv)
 {
@@ -74,12 +74,11 @@ int main(int argc, char** argv)
         // A better solution, entropy_getbytes, using /dev/random, is provided
         // in the full library.
         
-        pcg32_srandom_r(&rng, time(NULL) ^ (intptr_t)&printf, 
-			      (intptr_t)&rounds);
+        pcg32_srand(&rng, time(NULL) ^ (intptr_t)&printf);
     } else {
         // Seed with a fixed constant
 
-        pcg32_srandom_r(&rng, 42u, 54u);
+        pcg32_srand(&rng, 42u);
     }
 
     printf("pcg32_random_r:\n"
@@ -95,19 +94,19 @@ int main(int argc, char** argv)
         /* Make some 32-bit numbers */
         printf("  32bit:");
         for (i = 0; i < 6; ++i)
-            printf(" 0x%08x", pcg32_random_r(&rng));
+            printf(" 0x%08x", pcg32_rand(&rng));
         printf("\n");
 
         /* Toss some coins */
         printf("  Coins: ");
         for (i = 0; i < 65; ++i)
-            printf("%c", pcg32_boundedrand_r(&rng, 2) ? 'H' : 'T');
+            printf("%c", pcg32_uniform(&rng, 2) ? 'H' : 'T');
         printf("\n");
 
         /* Roll some dice */
         printf("  Rolls:");
         for (i = 0; i < 33; ++i) {
-            printf(" %d", (int)pcg32_boundedrand_r(&rng, 6) + 1);
+            printf(" %d", (int)pcg32_uniform(&rng, 6) + 1);
         }
         printf("\n");
 
@@ -119,7 +118,7 @@ int main(int argc, char** argv)
             cards[i] = i;
 
         for (i = CARDS; i > 1; --i) {
-            int chosen = pcg32_boundedrand_r(&rng, i);
+            int chosen = pcg32_uniform(&rng, i);
             char card = cards[chosen];
             cards[chosen] = cards[i - 1];
             cards[i - 1] = card;

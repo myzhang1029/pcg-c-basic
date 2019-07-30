@@ -2,6 +2,7 @@
  * PCG Random Number Generation for C.
  *
  * Copyright 2014 Melissa O'Neill <oneill@pcg-random.org>
+ * Copyright 2019 Zhang Maiyun
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,36 +29,32 @@
  * your project.
  */
 
-#include "pcg_basic.h"
+#include "pcg_easy.h"
 
 // pcg32_srandom_r(rng, initstate, initseq):
 //     Seed the rng.  Specified in two parts, state initializer and a
 //     sequence selection constant (a.k.a. stream id)
 
-void pcg32_srandom_r(pcg32_random_t* rng, uint64_t initstate, uint64_t initseq)
+void pcg32_srand(pcg32_random_t* rng, uint64_t initstate)
 {
     rng->state = 0U;
-    rng->inc = (initseq << 1u) | 1u;
+    rng->inc = ((uint64_t)rng << 1u) | 1u;
     pcg32_random_r(rng);
     rng->state += initstate;
     pcg32_random_r(rng);
 }
 
-void pcg32x2_srandom_r(pcg32x2_random_t* rng, uint64_t seed1, uint64_t seed2,
+void pcg32x2_srand(pcg32x2_random_t* rng, uint64_t seed1, uint64_t seed2,
                        uint64_t seq1,  uint64_t seq2)
 {
-    uint64_t mask = ~0ull >> 1;
-    // The stream for each of the two generators *must* be distinct
-    if ((seq1 & mask) == (seq2 & mask)) 
-        seq2 = ~seq2;
-    pcg32_srandom_r(rng->gen,   seed1, seq1);
-    pcg32_srandom_r(rng->gen+1, seed2, seq2);
+    pcg32_srand(rng->gen,   seed1);
+    pcg32_srand(rng->gen+1, seed2);
 }
 
 // pcg32_random_r(rng)
 //     Generate a uniformly distributed 32-bit random number
 
-uint32_t pcg32_random_r(pcg32_random_t* rng)
+uint32_t pcg32_rand(pcg32_random_t* rng)
 {
     uint64_t oldstate = rng->state;
     rng->state = oldstate * 6364136223846793005ULL + rng->inc;
@@ -66,7 +63,7 @@ uint32_t pcg32_random_r(pcg32_random_t* rng)
     return (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
 }
 
-uint64_t pcg32x2_random_r(pcg32x2_random_t* rng)
+uint64_t pcg32x2_rand(pcg32x2_random_t* rng)
 {
     return ((uint64_t)(pcg32_random_r(rng->gen)) << 32)
            | pcg32_random_r(rng->gen+1);
@@ -76,7 +73,7 @@ uint64_t pcg32x2_random_r(pcg32x2_random_t* rng)
 // pcg32_boundedrand_r(rng, bound):
 //     Generate a uniformly distributed number, r, where 0 <= r < bound
 
-uint32_t pcg32_boundedrand_r(pcg32_random_t* rng, uint32_t bound)
+uint32_t pcg32_uniform(pcg32_random_t* rng, uint32_t bound)
 {
     // To avoid bias, we need to make the range of the RNG a multiple of
     // bound, which we do by dropping output less than a threshold.
@@ -108,7 +105,7 @@ uint32_t pcg32_boundedrand_r(pcg32_random_t* rng, uint32_t bound)
     }
 }
 
-uint64_t pcg32x2_boundedrand_r(pcg32x2_random_t* rng, uint64_t bound)
+uint64_t pcg32x2_uniform(pcg32x2_random_t* rng, uint64_t bound)
 {
     uint64_t threshold = -bound % bound;
     for (;;) {
