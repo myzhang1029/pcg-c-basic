@@ -54,7 +54,7 @@ void pcg32x2_srand(pcg32x2_random_t* rng, uint64_t seed1, uint64_t seed2,
 // pcg32_random_r(rng)
 //     Generate a uniformly distributed 32-bit random number
 
-uint32_t pcg32_random_r(pcg32_random_t* rng)
+uint32_t pcg32_rand(pcg32_random_t* rng)
 {
     uint64_t oldstate = rng->state;
     rng->state = oldstate * 6364136223846793005ULL + rng->inc;
@@ -63,7 +63,7 @@ uint32_t pcg32_random_r(pcg32_random_t* rng)
     return (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
 }
 
-uint64_t pcg32x2_random_r(pcg32x2_random_t* rng)
+uint64_t pcg32x2_rand(pcg32x2_random_t* rng)
 {
     return ((uint64_t)(pcg32_random_r(rng->gen)) << 32)
            | pcg32_random_r(rng->gen+1);
@@ -73,7 +73,7 @@ uint64_t pcg32x2_random_r(pcg32x2_random_t* rng)
 // pcg32_boundedrand_r(rng, bound):
 //     Generate a uniformly distributed number, r, where 0 <= r < bound
 
-uint32_t pcg32_boundedrand_r(pcg32_random_t* rng, uint32_t bound)
+uint32_t pcg32_uniform(pcg32_random_t* rng, uint32_t bound)
 {
     // To avoid bias, we need to make the range of the RNG a multiple of
     // bound, which we do by dropping output less than a threshold.
@@ -105,7 +105,7 @@ uint32_t pcg32_boundedrand_r(pcg32_random_t* rng, uint32_t bound)
     }
 }
 
-uint64_t pcg32x2_boundedrand_r(pcg32x2_random_t* rng, uint64_t bound)
+uint64_t pcg32x2_uniform(pcg32x2_random_t* rng, uint64_t bound)
 {
     uint64_t threshold = -bound % bound;
     for (;;) {
