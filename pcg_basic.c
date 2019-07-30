@@ -53,6 +53,17 @@ void pcg32_srandom(uint64_t seed, uint64_t seq)
     pcg32_srandom_r(&pcg32_global, seed, seq);
 }
 
+void pcg32x2_srandom_r(pcg32x2_random_t* rng, uint64_t seed1, uint64_t seed2,
+                       uint64_t seq1,  uint64_t seq2)
+{
+    uint64_t mask = ~0ull >> 1;
+    // The stream for each of the two generators *must* be distinct
+    if ((seq1 & mask) == (seq2 & mask)) 
+        seq2 = ~seq2;
+    pcg32_srandom_r(rng->gen,   seed1, seq1);
+    pcg32_srandom_r(rng->gen+1, seed2, seq2);
+}
+
 // pcg32_random()
 // pcg32_random_r(rng)
 //     Generate a uniformly distributed 32-bit random number
@@ -71,6 +82,11 @@ uint32_t pcg32_random()
     return pcg32_random_r(&pcg32_global);
 }
 
+uint64_t pcg32x2_random_r(pcg32x2_random_t* rng)
+{
+    return ((uint64_t)(pcg32_random_r(rng->gen)) << 32)
+           | pcg32_random_r(rng->gen+1);
+}
 
 // pcg32_boundedrand(bound):
 // pcg32_boundedrand_r(rng, bound):
@@ -108,9 +124,17 @@ uint32_t pcg32_boundedrand_r(pcg32_random_t* rng, uint32_t bound)
     }
 }
 
-
 uint32_t pcg32_boundedrand(uint32_t bound)
 {
     return pcg32_boundedrand_r(&pcg32_global, bound);
 }
 
+uint64_t pcg32x2_boundedrand_r(pcg32x2_random_t* rng, uint64_t bound)
+{
+    uint64_t threshold = -bound % bound;
+    for (;;) {
+        uint64_t r = pcg32x2_random_r(rng);
+        if (r >= threshold)
+            return r % bound;
+    }
+}
