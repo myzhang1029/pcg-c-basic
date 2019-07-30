@@ -33,9 +33,7 @@
 #include <time.h>
 #include <string.h>
 
-#include "pcg_basic.h"
-
-int dummy_global;
+#include "pcg_easy.h"
 
 int main(int argc, char** argv)
 {
@@ -76,14 +74,12 @@ int main(int argc, char** argv)
         // A better solution, entropy_getbytes, using /dev/random, is provided
         // in the full library.
         
-        pcg32x2_srandom_r(&rng, time(NULL) ^ (intptr_t)&printf,
-                               ~time(NULL) ^ (intptr_t)&pcg32_random_r,
-                                (intptr_t)&rounds,
-                                (intptr_t)&dummy_global);
+        pcg32x2_srand(&rng, time(NULL) ^ (intptr_t)&printf,
+                               ~time(NULL) ^ (intptr_t)&pcg32_random_r);
     } else {
         // Seed with a fixed constant
 
-        pcg32x2_srandom_r(&rng, 42u, 42u, 54u, 54u);
+        pcg32x2_srand(&rng, 42u, 42u);
     }
 
     printf("pcg32x2_random_r:\n"
@@ -97,25 +93,25 @@ int main(int argc, char** argv)
 
     for (round = 1; round <= rounds; ++round) {
         printf("Round %d:\n", round);
-        /* Make some 32-bit numbers */
+        /* Make some 64-bit numbers */
         printf("  64bit:");
         for (i = 0; i < 6; ++i) {
             if (i > 0 && i % 3 == 0)
                 printf("\n\t");
-            printf(" 0x%016llx", pcg32x2_random_r(&rng));
+            printf(" 0x%016llx", pcg32x2_rand(&rng));
         }
         printf("\n");
 
         /* Toss some coins */
         printf("  Coins: ");
         for (i = 0; i < 65; ++i)
-            printf("%c", pcg32x2_boundedrand_r(&rng, 2) ? 'H' : 'T');
+            printf("%c", pcg32x2_uniform(&rng, 2) ? 'H' : 'T');
         printf("\n");
 
         /* Roll some dice */
         printf("  Rolls:");
         for (i = 0; i < 33; ++i) {
-            printf(" %d", (int)pcg32x2_boundedrand_r(&rng, 6) + 1);
+            printf(" %d", (int)pcg32x2_uniform(&rng, 6) + 1);
         }
         printf("\n");
 
@@ -127,7 +123,7 @@ int main(int argc, char** argv)
             cards[i] = i;
 
         for (i = CARDS; i > 1; --i) {
-            int chosen = pcg32x2_boundedrand_r(&rng, i);
+            int chosen = pcg32x2_uniform(&rng, i);
             char card = cards[chosen];
             cards[chosen] = cards[i - 1];
             cards[i - 1] = card;
