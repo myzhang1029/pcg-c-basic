@@ -64,8 +64,8 @@ uint32_t pcg32_rand(pcg32_random_t* rng)
 
 uint64_t pcg32x2_rand(pcg32x2_random_t* rng)
 {
-    return ((uint64_t)(pcg32_random_r(rng->gen)) << 32)
-           | pcg32_random_r(rng->gen+1);
+    return ((uint64_t)(pcg32_rand(rng->gen)) << 32)
+           | pcg32_rand(rng->gen+1);
 }
 
 // pcg32_boundedrand(bound):
