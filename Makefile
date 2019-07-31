@@ -28,9 +28,9 @@ all: $(TARGETS)
 clean:
 	rm -f *.o $(TARGETS)
 
-pcg32-demo: pcg32-demo.o pcg_basic.o
-pcg32x2-demo: pcg32x2-demo.o pcg_basic.o
+pcg32-demo: pcg32-demo.o pcg_easy.o
+pcg32x2-demo: pcg32x2-demo.o pcg_easy.o
 
-pcg_basic.o: pcg_easy.c pcg_easy.h
-pcg32-demo.o: pcg32-demo.c pcg_basic.h
-pcg32x2-demo.o: pcg32x2-demo.c pcg_basic.h
+pcg_easy.o: pcg_easy.c pcg_easy.h
+pcg32-demo.o: pcg32-demo.c pcg_easy.h
+pcg32x2-demo.o: pcg32x2-demo.c pcg_easy.h
