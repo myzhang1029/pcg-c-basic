@@ -32,6 +32,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include <string.h>
+#include <inttypes.h>
 
 #include "pcg_easy.h"
 
@@ -94,7 +95,7 @@ int main(int argc, char** argv)
         /* Make some 32-bit numbers */
         printf("  32bit:");
         for (i = 0; i < 6; ++i)
-            printf(" 0x%08x", pcg32_rand(&rng));
+            printf(" 0x%08" PRIx32, pcg32_rand(&rng));
         printf("\n");
 
         /* Toss some coins */

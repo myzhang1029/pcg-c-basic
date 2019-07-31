@@ -32,6 +32,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include <string.h>
+#include <inttypes.h>
 
 #include "pcg_easy.h"
 
@@ -98,7 +99,7 @@ int main(int argc, char** argv)
         for (i = 0; i < 6; ++i) {
             if (i > 0 && i % 3 == 0)
                 printf("\n\t");
-            printf(" 0x%016llx", pcg32x2_rand(&rng));
+            printf(" 0x%016" PRIx64, pcg32x2_rand(&rng));
         }
         printf("\n");
 
