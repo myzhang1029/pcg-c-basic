@@ -57,7 +57,7 @@ typedef struct {
 //     sequence selection constant (a.k.a. stream id)
 
 void pcg32_srand(pcg32_random_t* rng, uint64_t initstate);
-void pcg32x2_srand(pcg32x2_random_t* rng, uint64_t seed1);
+void pcg32x2_srand(pcg32x2_random_t* rng, uint64_t seed1, uint64_t seed2);
 
 // pcg32_random_r(rng)
 //     Generate a uniformly distributed 32-bit random number
