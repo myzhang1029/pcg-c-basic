@@ -39,13 +39,12 @@ void pcg32_srand(pcg32_random_t* rng, uint64_t initstate)
 {
     rng->state = 0U;
     rng->inc = ((uint64_t)rng << 1u) | 1u;
-    pcg32_random_r(rng);
+    pcg32_rand(rng);
     rng->state += initstate;
-    pcg32_random_r(rng);
+    pcg32_rand(rng);
 }
 
-void pcg32x2_srand(pcg32x2_random_t* rng, uint64_t seed1, uint64_t seed2,
-                       uint64_t seq1,  uint64_t seq2)
+void pcg32x2_srand(pcg32x2_random_t* rng, uint64_t seed1, uint64_t seed2)
 {
     pcg32_srand(rng->gen,   seed1);
     pcg32_srand(rng->gen+1, seed2);
@@ -99,7 +98,7 @@ uint32_t pcg32_uniform(pcg32_random_t* rng, uint32_t bound)
     // practice, bounds are typically small and only a tiny amount of the range
     // is eliminated.
     for (;;) {
-        uint32_t r = pcg32_random_r(rng);
+        uint32_t r = pcg32_rand(rng);
         if (r >= threshold)
             return r % bound;
     }
@@ -109,7 +108,7 @@ uint64_t pcg32x2_uniform(pcg32x2_random_t* rng, uint64_t bound)
 {
     uint64_t threshold = -bound % bound;
     for (;;) {
-        uint64_t r = pcg32x2_random_r(rng);
+        uint64_t r = pcg32x2_rand(rng);
         if (r >= threshold)
             return r % bound;
     }
