@@ -75,7 +75,7 @@ int main(int argc, char** argv)
         // in the full library.
         
         pcg32x2_srand(&rng, time(NULL) ^ (intptr_t)&printf,
-                               ~time(NULL) ^ (intptr_t)&pcg32_random_r);
+                               ~time(NULL) ^ (intptr_t)&scanf);
     } else {
         // Seed with a fixed constant
 
