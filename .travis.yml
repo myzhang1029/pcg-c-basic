@@ -1,0 +1,7 @@
+language: c
+git:
+    quiet: true
+script:
+    - make
+    - ./pcg32-demo
+    - ./pcg32x2-demo
