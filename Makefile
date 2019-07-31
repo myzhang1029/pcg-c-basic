@@ -22,7 +22,7 @@
 #
 
 TARGETS = pcg32-demo pcg32x2-demo
-
+CFLAGS = -Wall -Wextra
 all: $(TARGETS)
 
 clean:
