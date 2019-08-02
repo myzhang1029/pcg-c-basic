@@ -25,18 +25,18 @@
  * This file was mechanically generated from tests/check-pcg32.c
  */
 
-#include <stdio.h>
-#include <stddef.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <time.h>
-#include <string.h>
 #include <inttypes.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 #include "pcg_easy.h"
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     // Read command-line options
 
@@ -46,12 +46,14 @@ int main(int argc, char** argv)
 
     ++argv;
     --argc;
-    if (argc > 0 && strcmp(argv[0], "-r") == 0) {
+    if (argc > 0 && strcmp(argv[0], "-r") == 0)
+    {
         nondeterministic_seed = true;
         ++argv;
         --argc;
     }
-    if (argc > 0) {
+    if (argc > 0)
+    {
         rounds = atoi(argv[0]);
     }
 
@@ -69,14 +71,17 @@ int main(int argc, char** argv)
     // *never* have random sequences that coincide, at all) - the code below
     // shows three possible ways to do so.
 
-    if (nondeterministic_seed) {
+    if (nondeterministic_seed)
+    {
         // Seed with external entropy -- the time and some program addresses
         // (which will actually be somewhat random on most modern systems).
         // A better solution, entropy_getbytes, using /dev/random, is provided
         // in the full library.
-        
+
         pcg32_srand(&rng, time(NULL) ^ (intptr_t)&printf);
-    } else {
+    }
+    else
+    {
         // Seed with a fixed constant
 
         pcg32_srand(&rng, 42u);
@@ -90,7 +95,8 @@ int main(int argc, char** argv)
            "\n",
            sizeof(pcg32_random_t));
 
-    for (round = 1; round <= rounds; ++round) {
+    for (round = 1; round <= rounds; ++round)
+    {
         printf("Round %d:\n", round);
         /* Make some 32-bit numbers */
         printf("  32bit:");
@@ -106,19 +112,26 @@ int main(int argc, char** argv)
 
         /* Roll some dice */
         printf("  Rolls:");
-        for (i = 0; i < 33; ++i) {
+        for (i = 0; i < 33; ++i)
+        {
             printf(" %d", (int)pcg32_uniform(&rng, 6) + 1);
         }
         printf("\n");
 
         /* Deal some cards */
-        enum { SUITS = 4, NUMBERS = 13, CARDS = 52 };
+        enum
+        {
+            SUITS = 4,
+            NUMBERS = 13,
+            CARDS = 52
+        };
         char cards[CARDS];
 
         for (i = 0; i < CARDS; ++i)
             cards[i] = i;
 
-        for (i = CARDS; i > 1; --i) {
+        for (i = CARDS; i > 1; --i)
+        {
             int chosen = pcg32_uniform(&rng, i);
             char card = cards[chosen];
             cards[chosen] = cards[i - 1];
@@ -129,7 +142,8 @@ int main(int argc, char** argv)
         static const char number[] = {'A', '2', '3', '4', '5', '6', '7',
                                       '8', '9', 'T', 'J', 'Q', 'K'};
         static const char suit[] = {'h', 'c', 'd', 's'};
-        for (i = 0; i < CARDS; ++i) {
+        for (i = 0; i < CARDS; ++i)
+        {
             printf(" %c%c", number[cards[i] / SUITS], suit[cards[i] % SUITS]);
             if ((i + 1) % 22 == 0)
                 printf("\n\t");

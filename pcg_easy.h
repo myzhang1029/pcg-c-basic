@@ -37,39 +37,43 @@
 extern "C" {
 #endif
 
-struct pcg_state_setseq_64 {    // Internals are *Private*.
-    uint64_t state;             // RNG state.  All values are possible.
-    uint64_t inc;               // Controls which RNG sequence (stream) is
-                                // selected. Must *always* be odd.
+struct pcg_state_setseq_64
+{                   // Internals are *Private*.
+    uint64_t state; // RNG state.  All values are possible.
+    uint64_t inc;   // Controls which RNG sequence (stream) is
+                    // selected. Must *always* be odd.
 };
 typedef struct pcg_state_setseq_64 pcg32_random_t;
 
-typedef struct {
+typedef struct
+{
     pcg32_random_t gen[2];
 } pcg32x2_random_t;
 
 // If you *must* statically initialize it, here's one.
 
-#define PCG32_INITIALIZER   { 0x853c49e6748fea9bULL, 0xda3e39cb94b95bdbULL }
+#define PCG32_INITIALIZER                                                      \
+    {                                                                          \
+        0x853c49e6748fea9bULL, 0xda3e39cb94b95bdbULL                           \
+    }
 
 // pcg32_srandom_r(rng, initstate, initseq):
 //     Seed the rng.  Specified in two parts, state initializer and a
 //     sequence selection constant (a.k.a. stream id)
 
-void pcg32_srand(pcg32_random_t* rng, uint64_t initstate);
-void pcg32x2_srand(pcg32x2_random_t* rng, uint64_t seed1, uint64_t seed2);
+void pcg32_srand(pcg32_random_t *rng, uint64_t initstate);
+void pcg32x2_srand(pcg32x2_random_t *rng, uint64_t seed1, uint64_t seed2);
 
 // pcg32_random_r(rng)
 //     Generate a uniformly distributed 32-bit random number
 
-uint32_t pcg32_rand(pcg32_random_t* rng);
-uint64_t pcg32x2_rand(pcg32x2_random_t* rng);
+uint32_t pcg32_rand(pcg32_random_t *rng);
+uint64_t pcg32x2_rand(pcg32x2_random_t *rng);
 
 // pcg32_boundedrand_r(rng, bound):
 //     Generate a uniformly distributed number, r, where 0 <= r < bound
 
-uint32_t pcg32_uniform(pcg32_random_t* rng, uint32_t bound);
-uint64_t pcg32x2_uniform(pcg32x2_random_t* rng, uint64_t bound);
+uint64_t pcg32x2_uniform(pcg32x2_random_t *rng, uint64_t bound);
 
 #if __cplusplus
 }
